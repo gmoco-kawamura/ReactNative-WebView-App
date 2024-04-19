@@ -1,117 +1,78 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { SafeAreaView, StyleSheet, NativeSyntheticEvent } from 'react-native';
+// import RnWebviewSdk2View from 'rn-webview-sdk2';
+import SmaAdWebView from 'smaad-rn-sdk'
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+// イベントの型定義
+interface LoadFinishedEventData {
+  url: string;
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+type LoadFinishedEvent = NativeSyntheticEvent<LoadFinishedEventData>;
+type LoadStartedEvent = NativeSyntheticEvent<{ url: string }>;
+type RedirectReceivedEvent = NativeSyntheticEvent<{ url: string }>;
+type LoadErrorEvent = NativeSyntheticEvent<{ url: string, error: string }>;
+type ClosePressedEvent = NativeSyntheticEvent<{ message: string}>;
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+
+const App = () => {
+  const [isVisible, setIsVisible] = useState(true); // Webviewの表示状態を制御するステート
+
+  const handleLoadFinished = useCallback((event: LoadFinishedEvent) => {
+    console.log('Web page loaded!!!:', event.nativeEvent.url);
+  }, []);
+
+  const handleLoadStarted = useCallback((event: LoadStartedEvent) => {
+    console.log('Loading started for:', event.nativeEvent.url);
+  }, []);
+
+  const handleRedirectReceived = useCallback((event: RedirectReceivedEvent) => {
+    console.log('Redirect received to:', event.nativeEvent.url);
+  }, []);
+
+  const handleLoadError = useCallback((event: LoadErrorEvent) => {
+    console.error('Load error for:', event.nativeEvent.url, 'with error:', event.nativeEvent.error);
+  }, []);
+
+  const handleClosePressed = useCallback((event: ClosePressedEvent) => {
+    console.log('Close button pressed');
+    setIsVisible(false);
+  }, []);
+
+  // 固定のzoneIdとuserParameterを設定
+  const zoneId= '770558503'; // zoneIdを数値型で指定
+  const userParameter = 'test'; // userParameterを文字列型で指定
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView style={styles.container}>
+      {/* RnWebviewSdk2ViewコンポーネントでWebページを表示 */}
+      {isVisible && (
+        <SmaAdWebView
+          style={styles.webview}
+          zoneId={zoneId}
+          userParameter={userParameter}
+          onLoadFinished={handleLoadFinished}
+          onLoadStarted={handleLoadStarted}
+          onRedirectReceived={handleRedirectReceived}
+          onLoadError={handleLoadError}
+          onClosePressed={handleClosePressed}
+        />
+      )}
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  webview: {
+    flex: 1,
+    width: '100%', // WebViewを画面いっぱいに表示
   },
 });
 
