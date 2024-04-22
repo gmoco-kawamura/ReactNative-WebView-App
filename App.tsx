@@ -1,6 +1,6 @@
 
-import React, { useCallback, useState } from 'react';
-import { SafeAreaView, StyleSheet, NativeSyntheticEvent } from 'react-native';
+import React, { useCallback, useState, useEffect } from 'react';
+import { SafeAreaView, StyleSheet, NativeSyntheticEvent, Button, NativeEventEmitter, NativeModules } from 'react-native';
 // import RnWebviewSdk2View from 'rn-webview-sdk2';
 import SmaAdWebView from 'smaad-rn-sdk'
 
@@ -17,7 +17,9 @@ type ClosePressedEvent = NativeSyntheticEvent<{ message: string}>;
 
 
 const App = () => {
-  const [isVisible, setIsVisible] = useState(true); // Webviewの表示状態を制御するステート
+  const [webView, setWebView] = useState<JSX.Element | null>(null); // WebViewインスタンスを制御するステート
+
+  const smaAdWebViewEvents = new NativeEventEmitter(NativeModules.SmaAdWebView);
 
   const handleLoadFinished = useCallback((event: LoadFinishedEvent) => {
     console.log('Web page loaded!!!:', event.nativeEvent.url);
@@ -37,7 +39,38 @@ const App = () => {
 
   const handleClosePressed = useCallback((event: ClosePressedEvent) => {
     console.log('Close button pressed');
-    setIsVisible(false);
+    setWebView(null);
+  }, []);
+
+  useEffect(() => {
+    const subscriptions = [
+      smaAdWebViewEvents.addListener('onLoadStart', handleLoadStarted),
+      smaAdWebViewEvents.addListener('onLoadFinished', handleLoadFinished),
+      smaAdWebViewEvents.addListener('onRedirectReceived', handleRedirectReceived),
+      smaAdWebViewEvents.addListener('onLoadError', handleLoadError),
+      smaAdWebViewEvents.addListener('onClosePressed', handleClosePressed)
+    ];
+
+    return () => {
+      subscriptions.forEach(subscription => subscription.remove());
+    };
+  }, []);
+
+  const handleShowWebView = useCallback(() => {
+    const zoneId = '770558503';
+    const userParameter = 'test';
+    setWebView(
+      <SmaAdWebView
+        style={styles.webview}
+        zoneId={zoneId}
+        userParameter={userParameter}
+        onLoadFinished={handleLoadFinished}
+        onLoadStarted={handleLoadStarted}
+        onRedirectReceived={handleRedirectReceived}
+        onLoadError={handleLoadError}
+        onClosePressed={handleClosePressed}
+      />
+    );
   }, []);
 
   // 固定のzoneIdとuserParameterを設定
@@ -46,19 +79,8 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* RnWebviewSdk2ViewコンポーネントでWebページを表示 */}
-      {isVisible && (
-        <SmaAdWebView
-          style={styles.webview}
-          zoneId={zoneId}
-          userParameter={userParameter}
-          onLoadFinished={handleLoadFinished}
-          onLoadStarted={handleLoadStarted}
-          onRedirectReceived={handleRedirectReceived}
-          onLoadError={handleLoadError}
-          onClosePressed={handleClosePressed}
-        />
-      )}
+      {!webView && <Button title="Show WebView" onPress={handleShowWebView} />}
+      {webView}
     </SafeAreaView>
   );
 };

@@ -1123,7 +1123,7 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - smaad-rn-sdk (0.1.0):
+  - smaad-rn-sdk (0.1.5):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1395,7 +1395,7 @@ SPEC CHECKSUMS:
   ReactCommon: 2aa35648354bd4c4665b9a5084a7d37097b89c10
   rn-webview-sdk: a3a9d799eaa37768d59086cb8ec7f233536de20d
   rn-webview-sdk2: d2dd45c7e7c1de5fb3306890bf1e3b2e5498011c
-  smaad-rn-sdk: 11bf7a30f07b9cc4646b8d193dfaa1ed1f67492e
+  smaad-rn-sdk: 2d9da1c09912b6086e84d07880fa260346dfa147
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 805bf71192903b20fc14babe48080582fee65a80
 
