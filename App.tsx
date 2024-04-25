@@ -1,7 +1,6 @@
 
 import React, { useCallback, useState } from 'react';
 import { SafeAreaView, StyleSheet, NativeSyntheticEvent, Button, NativeEventEmitter, NativeModules } from 'react-native';
-// import RnWebviewSdk2View from 'rn-webview-sdk2';
 import SmaAdWebView from 'smaad-rn-sdk'
 
 // イベントの型定義
@@ -14,7 +13,6 @@ type LoadStartedEvent = NativeSyntheticEvent<{ url: string }>;
 type RedirectReceivedEvent = NativeSyntheticEvent<{ url: string }>;
 type LoadErrorEvent = NativeSyntheticEvent<{ url: string, error: string }>;
 type ClosePressedEvent = NativeSyntheticEvent<{ message: string}>;
-
 
 const App = () => {
   const [webView, setWebView] = useState<JSX.Element | null>(null); // WebViewインスタンスを制御するステート
@@ -56,10 +54,6 @@ const App = () => {
       />
     );
   }, []);
-
-  // 固定のzoneIdとuserParameterを設定
-  const zoneId= '770558503'; // zoneIdを数値型で指定
-  const userParameter = 'test'; // userParameterを文字列型で指定
 
   return (
     <SafeAreaView style={styles.container}>
