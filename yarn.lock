@@ -6076,10 +6076,10 @@ slice-ansi@^2.0.0:
     astral-regex "^1.0.0"
     is-fullwidth-code-point "^2.0.0"
 
-smaad-rn-sdk@^0.1.62:
-  version "0.1.62"
-  resolved "https://registry.npmjs.org/smaad-rn-sdk/-/smaad-rn-sdk-0.1.62.tgz"
-  integrity sha512-xInMTwYZbA8x8naWKrCE1Yo/D2HzmAkR0kJYK2fEma00mkfqnygwWS91Ifq1SHbh1dqF5o0VDGZxBYCzK+QZ+A==
+smaad-rn-sdk@^0.1.66:
+  version "0.1.66"
+  resolved "https://registry.npmjs.org/smaad-rn-sdk/-/smaad-rn-sdk-0.1.66.tgz"
+  integrity sha512-4rfMQZRqF/H7gHTA0SzeS9OxRUAtSYV1NoszBBEScf/UaEdDPsu6dqD1zUm0eZgeiRSufjNP99IIz0QbMndfgA==
 
 source-map-support@^0.5.16, source-map-support@~0.5.20:
   version "0.5.21"

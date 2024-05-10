@@ -1,7 +1,9 @@
 
 import React, { useCallback, useState } from 'react';
 import { SafeAreaView, StyleSheet, NativeSyntheticEvent, Button, NativeEventEmitter, NativeModules } from 'react-native';
-import SmaAdWebView from 'smaad-rn-sdk'
+// import SmaAdWebView from 'smaad-reactnative-sdk'
+import SmaAdWebView from 'smaad-rn-sdk';
+// import SmaadReactnative2View from 'react-native-smaad-reactnative2';
 
 // イベントの型定義
 interface LoadFinishedEventData {
@@ -68,7 +70,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   webview: {
     flex: 1,
